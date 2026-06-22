@@ -188,7 +188,7 @@ static uint8_t a_ds2431_read_bit(ds2431_handle_t *handle, uint8_t *data)
         
         return 1;                                                   /* return error */
     }
-    handle->delay_us(2);                                            /* wait 2 us */
+    handle->delay_us(6);                                            /* wait 6 us */
     if (handle->bus_write(1) != 0)                                  /* write 1 */
     {
         handle->debug_print("ds2431: bus write failed.\n");         /* write failed */
@@ -266,7 +266,7 @@ static uint8_t a_ds2431_write_byte(ds2431_handle_t *handle, uint8_t byte)
                 
                 return 1;                                                   /* return error */
             }
-            handle->delay_us(2);                                            /* wait 2 us */
+            handle->delay_us(6);                                            /* wait 6 us */
             if (handle->bus_write(1) != 0)                                  /* write 1 */
             {
                 handle->enable_irq();                                       /* enable irq */
@@ -293,7 +293,7 @@ static uint8_t a_ds2431_write_byte(ds2431_handle_t *handle, uint8_t byte)
                 
                 return 1;                                                   /* return error */
             }
-            handle->delay_us(2);                                            /* wait 2 us */
+            handle->delay_us(6);                                            /* wait 6 us */
         }
     }
     handle->enable_irq();                                                   /* enable irq */
@@ -332,7 +332,7 @@ static uint8_t a_ds2431_reset_overdrive(ds2431_handle_t *handle)
     }
     handle->delay_us(2);                                                /* wait 2 us */
     res = 1;                                                            /* reset res */
-    while ((res != 0) && (retry < 20))                                  /* wait 20 us */
+    while ((res != 0) && (retry < 30))                                  /* wait 30 us */
     {
         if (handle->bus_read((uint8_t *)&res) != 0)                     /* read 1 bit */
         {
@@ -344,7 +344,7 @@ static uint8_t a_ds2431_reset_overdrive(ds2431_handle_t *handle)
         retry++;                                                        /* retry times++ */
         handle->delay_us(1);                                            /* delay 1 us */
     }
-    if (retry >= 20)                                                    /* if retry times is over 20 times */
+    if (retry >= 30)                                                    /* if retry times is over 30 times */
     {
         handle->enable_irq();                                           /* enable irq */
         handle->debug_print("ds2431: bus read no response.\n");         /* no response */
@@ -356,7 +356,7 @@ static uint8_t a_ds2431_reset_overdrive(ds2431_handle_t *handle)
         retry = 0;                                                      /* reset retry */
     }
     res = 0;                                                            /* reset res */
-    while ((res == 0)&& (retry < 20))                                   /* wait 20 us */
+    while ((res == 0)&& (retry < 30))                                   /* wait 30 us */
     {
         if (handle->bus_read((uint8_t *)&res) != 0)                     /* read one bit */
         {
@@ -368,7 +368,7 @@ static uint8_t a_ds2431_reset_overdrive(ds2431_handle_t *handle)
         retry++;                                                        /* retry times++ */
         handle->delay_us(1);                                            /* delay 1 us */
     }
-    if (retry >= 20)                                                    /* if retry times is over 20 times */
+    if (retry >= 30)                                                    /* if retry times is over 30 times */
     {
         handle->enable_irq();                                           /* enable irq */
         handle->debug_print("ds2431: bus read no response.\n");         /* no response */
@@ -713,7 +713,7 @@ uint8_t ds2431_copy_scratchpad(ds2431_handle_t *handle, uint16_t address)
             
             return 1;                                                          /* return error */
         }
-        handle->delay_ms(10);                                                  /* delay 10ms */
+        handle->delay_ms(15);                                                  /* delay 15ms */
         if (a_ds2431_read_byte(handle, &response) != 0)                        /* read byte */
         {
             handle->debug_print("ds2431: read data failed.\n");                /* read data failed */
@@ -771,7 +771,7 @@ uint8_t ds2431_copy_scratchpad(ds2431_handle_t *handle, uint16_t address)
             
             return 1;                                                          /* return error */
         }
-        handle->delay_ms(10);                                                  /* delay 10ms */
+        handle->delay_ms(15);                                                  /* delay 15ms */
         if (a_ds2431_read_byte_overdrive(handle, &response) != 0)              /* read byte */
         {
             handle->debug_print("ds2431: read data failed.\n");                /* read data failed */
@@ -835,7 +835,7 @@ uint8_t ds2431_copy_scratchpad(ds2431_handle_t *handle, uint16_t address)
             
             return 1;                                                          /* return error */
         }
-        handle->delay_ms(10);                                                  /* delay 10ms */
+        handle->delay_ms(15);                                                  /* delay 15ms */
         if (a_ds2431_read_byte(handle, &response) != 0)                        /* read byte */
         {
             handle->debug_print("ds2431: read data failed.\n");                /* read data failed */
@@ -902,7 +902,7 @@ uint8_t ds2431_copy_scratchpad(ds2431_handle_t *handle, uint16_t address)
             
             return 1;                                                          /* return error */
         }
-        handle->delay_ms(10);                                                  /* delay 10ms */
+        handle->delay_ms(15);                                                  /* delay 15ms */
         if (a_ds2431_read_byte_overdrive(handle, &response) != 0)              /* read byte */
         {
             handle->debug_print("ds2431: read data failed.\n");                /* read data failed */
@@ -957,7 +957,7 @@ uint8_t ds2431_copy_scratchpad(ds2431_handle_t *handle, uint16_t address)
             
             return 1;                                                          /* return error */
         }
-        handle->delay_ms(10);                                                  /* delay 10ms */
+        handle->delay_ms(15);                                                  /* delay 15ms */
         if (a_ds2431_read_byte(handle, &response) != 0)                        /* read byte */
         {
             handle->debug_print("ds2431: read data failed.\n");                /* read data failed */
@@ -1015,7 +1015,7 @@ uint8_t ds2431_copy_scratchpad(ds2431_handle_t *handle, uint16_t address)
             
             return 1;                                                          /* return error */
         }
-        handle->delay_ms(10);                                                  /* delay 10ms */
+        handle->delay_ms(15);                                                  /* delay 15ms */
         if (a_ds2431_read_byte_overdrive(handle, &response) != 0)              /* read byte */
         {
             handle->debug_print("ds2431: read data failed.\n");                /* read data failed */
