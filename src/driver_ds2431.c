@@ -195,7 +195,7 @@ static uint8_t a_ds2431_read_bit(ds2431_handle_t *handle, uint8_t *data)
         
         return 1;                                                   /* return error */
     }
-    handle->delay_us(12);                                           /* wait 12 us */
+    handle->delay_us(6);                                            /* wait 6 us */
     if (handle->bus_read(data) != 0)                                /* read 1 bit */
     {
         handle->debug_print("ds2431: bus read failed.\n");          /* read failed */
