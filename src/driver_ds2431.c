@@ -4285,30 +4285,44 @@ static uint8_t a_ds2431_read_2bit(ds2431_handle_t *handle, uint8_t *data)
 static uint8_t a_ds2431_write_bit(ds2431_handle_t *handle, uint8_t bit)
 {    
     handle->disable_irq();                                          /* disable irq */
-    if (handle->bus_write(0) != 0)                                  /* write 0 */
+    if (bit != 0)                                                   /* write 1 */
     {
-        handle->enable_irq();                                       /* enable irq */
-        handle->debug_print("ds2431: write bit failed.\n");         /* write bit failed */
-        
-        return 1;                                                   /* return error */
+        if (handle->bus_write(0) != 0)                              /* pull the bus low */
+        {
+            handle->enable_irq();                                   /* enable irq */
+            handle->debug_print("ds2431: write bit failed.\n");     /* write bit failed */
+            
+            return 1;                                               /* return error */
+        }
+        handle->delay_us(2);                                        /* wait 2 us */
+        if (handle->bus_write(1) != 0)                              /* release the bus */
+        {
+            handle->enable_irq();                                   /* enable irq */
+            handle->debug_print("ds2431: write bit failed.\n");     /* write bit failed */
+            
+            return 1;                                               /* return error */
+        }
+        handle->delay_us(60);                                       /* wait 60 us */
     }
-    handle->delay_us(12);                                           /* wait 12 us */
-    if (handle->bus_write(bit) != 0)                                /* write bit */
+    else                                                            /* write 0 */
     {
-        handle->enable_irq();                                       /* enable irq */
-        handle->debug_print("ds2431: write bit failed.\n");         /* write bit failed */
-        
-        return 1;                                                   /* return error */
-    } 
-    handle->delay_us(30);                                           /* wait 30 us */
-    if (handle->bus_write(1) != 0)                                  /* write 1 */
-    {
-        handle->enable_irq();                                       /* enable irq */
-        handle->debug_print("ds2431: write bit failed.\n");         /* write bit failed */
-        
-        return 1;                                                   /* return error */
+        if (handle->bus_write(0) != 0)                              /* pull the bus low */
+        {
+            handle->enable_irq();                                   /* enable irq */
+            handle->debug_print("ds2431: write bit failed.\n");     /* write bit failed */
+            
+            return 1;                                               /* return error */
+        }
+        handle->delay_us(60);                                       /* wait 60 us */
+        if (handle->bus_write(1) != 0)                              /* release the bus */
+        {
+            handle->enable_irq();                                   /* enable irq */
+            handle->debug_print("ds2431: write bit failed.\n");     /* write bit failed */
+            
+            return 1;                                               /* return error */
+        }
+        handle->delay_us(2);                                        /* wait 2 us */
     }
-    handle->delay_us(5);                                            /* wait 5 us */
     handle->enable_irq();                                           /* enable irq */
     
     return 0;                                                       /* success return 0 */
@@ -4441,7 +4455,7 @@ static uint8_t a_ds2431_search(ds2431_handle_t *handle, uint8_t (*pid)[8], uint8
             s = 0;                                                                        /* reset s */
         }
         num++;                                                                            /* num++ */
-        if (num > (*number))                                                              /* check num range */
+        if (num >= (*number))                                                             /* check num range */
         {
             break;                                                                        /* break */
         }
